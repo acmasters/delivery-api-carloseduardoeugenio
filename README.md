@@ -32,5 +32,5 @@ Sistema de delivery desenvolvido com Spring Boot e Java 21.
 - Profile: development
 
 ## 👨‍💻 Desenvolvedor
-[Seu Nome] - [Sua Turma]
+[Carlos Eugenio] - [arquitetura-de-sistemas-58b-02728]
 Desenvolvido com JDK 21 e Spring Boot 3.4.8
