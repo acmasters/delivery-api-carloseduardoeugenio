@@ -38,11 +38,11 @@ public class Order {
     private List<OrderItems> items;
 
     @ManyToOne
-    @JoinColumn(name = "clientID")
+    @JoinColumn(name = "client_id")
     private Client client;
 
     @ManyToOne
-    @JoinColumn(name = "restaurantID")
+    @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 
     @Enumerated(EnumType.STRING)
