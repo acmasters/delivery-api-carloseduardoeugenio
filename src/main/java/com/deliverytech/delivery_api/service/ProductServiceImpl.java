@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.modelmapper.ModelMapper;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -17,14 +18,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Long createProduct(ProductDTO productDTO) {
-        ModelMapper modelMapper = new ModelMapper();
-        Product product = modelMapper.map(productDTO, Product.class);
-        Product savedProduct = repository.save(product);
+        var modelMapper = new ModelMapper();
+        var product = modelMapper.map(productDTO, Product.class);
+        var savedProduct = repository.save(product);
         return savedProduct.getId();
     }
 
     @Override
-    public List<ProductDTO> findProductbyRestaurant(Long Idrestaurant) {
+    public List<ProductDTO> findProductbyRestaurant(Long restaurantID) {
         return List.of();
     }
 
@@ -35,9 +36,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDTO updateProduct(Long id, ProductDTO productDTO) {
-        Product product = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Produto não encontrado com ID: " + id));
-        ModelMapper modelMapper = new ModelMapper();
+        var product = repository.findById(id).orElseThrow(()
+                -> new EntityNotFoundException("Product not found ID: %d".formatted(id)));
         product.setName(productDTO.getName());
         product.setDescription(productDTO.getDescription());
         product.setPrice(productDTO.getPrice());
@@ -45,7 +45,6 @@ public class ProductServiceImpl implements ProductService {
         product.setAvailable(product.isAvailable());
         repository.save(product);
         return productDTO;
-
     }
 
     @Override
@@ -60,6 +59,19 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDTO> getAllProducts() {
-        return List.of();
+        return repository.findAll()
+                .stream()
+                .map(this::ConvertEntityToDTO)
+                .collect(Collectors.toList());
+    }
+
+    private ProductDTO ConvertEntityToDTO(Product entity) {
+        var productDTO = new ProductDTO();
+        productDTO.setName(entity.getName());
+        productDTO.setDescription(entity.getDescription());
+        productDTO.setCategory(entity.getCategory());
+        productDTO.setPrice(entity.getPrice());
+        productDTO.setAvailable(entity.isAvailable());
+        return productDTO;
     }
 }

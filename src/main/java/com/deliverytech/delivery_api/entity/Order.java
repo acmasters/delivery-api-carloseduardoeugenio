@@ -46,5 +46,5 @@ public class Order {
     private Restaurant restaurant;
 
     @Enumerated(EnumType.STRING)
-    private StateOrder stateOrder;
+    private OrderStatus orderStatus;
 }

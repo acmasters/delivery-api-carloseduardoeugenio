@@ -26,7 +26,7 @@ public class Product {
     private String description;
     private BigDecimal price;
     private String category;
-    private boolean isAvailable;
+    private boolean available;
 
     @ManyToOne
     @JoinColumn(name = "restaurantID")

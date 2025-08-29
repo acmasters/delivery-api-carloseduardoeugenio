@@ -1,6 +1,6 @@
 package com.deliverytech.delivery_api.entity;
 
-public enum StateOrder {
+public enum OrderStatus {
     PENDING,
     CONFIRM,
     PREPARING,

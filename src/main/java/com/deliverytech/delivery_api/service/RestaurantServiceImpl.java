@@ -2,32 +2,50 @@ package com.deliverytech.delivery_api.service;
 
 import com.deliverytech.delivery_api.dto.RestaurantDTO;
 import com.deliverytech.delivery_api.entity.Restaurant;
+import com.deliverytech.delivery_api.exception.ForbiddenException;
 import com.deliverytech.delivery_api.repository.RestaurantRepository;
+import jakarta.persistence.EntityNotFoundException;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class RestaurantServiceImpl {
+@Service
+public class RestaurantServiceImpl implements RestaurantService {
     @Autowired
-    private RestaurantRepository repository;
+    public RestaurantRepository repository;
 
-    public RestaurantServiceImpl(RestaurantRepository repository) {
-        this.repository = repository;
+    @Override
+    public List<RestaurantDTO> getAllRestaurants() {
+        return repository.findAll().stream().map(this::ConvertEntityToDTO)
+                .collect(Collectors.toList());
     }
 
-    public RestaurantServiceImpl() {
-        super();
+    public Long createRestaurant(RestaurantDTO restaurantDTO) {
+        ModelMapper modelMapper = new ModelMapper();
+        Restaurant restaurant = modelMapper.map(restaurantDTO, Restaurant.class);
+        Restaurant savedRestaurant = repository.save(restaurant);
+        return savedRestaurant.getId();
     }
 
-    public List<RestaurantDTO> findAll() {
-        return repository.findAll().stream().map(this::ConvertEntityToDTO).collect(Collectors.toList());
+    @Override
+    public RestaurantDTO updateRestaurant(Long id, RestaurantDTO restaurantDTO) {
+        var restaurant = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Restaurant ID not found: %d".formatted(id)));
+        if (restaurant.isActive()) {
+            restaurant.setName(restaurantDTO.getName());
+            restaurant.setName(restaurant.getDescription());
+            repository.save(restaurant);
+            return restaurantDTO;
+        }
+        throw new ForbiddenException("Restaurant is not active.");
     }
 
     private RestaurantDTO ConvertEntityToDTO(Restaurant entity){
-        RestaurantDTO dto = new RestaurantDTO();
-        dto.setName(entity.getName());
-        dto.setDescription(entity.getDescription());
-        return dto;
+        var restaurantDTO = new RestaurantDTO();
+        restaurantDTO.setName(entity.getName());
+        restaurantDTO.setDescription(entity.getDescription());
+        return restaurantDTO;
     }
 }

@@ -23,28 +23,25 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-
-    @GetMapping("/findall")
+    @GetMapping("/findAllProducts")
     public List<ProductDTO>getAllProducts() {
-        return null;
+        return productService.getAllProducts();
     }
+
     @PostMapping
-    public ResponseEntity<Long> createProduct(
-            @Valid
-            @RequestBody
-            ProductDTO dto) {
-        Long ok = productService.createProduct(dto);
+    public ResponseEntity<Long> createProduct(@Valid @RequestBody ProductDTO productDTO) {
+        Long ok = productService.createProduct(productDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(ok);
     }
 
     @PatchMapping("/{id}/product")
-    public ResponseEntity<ProductDTO> updateProduct(Long id, @RequestBody ProductDTO dto) {
-        ProductDTO savedProduct = productService.updateProduct(id, dto);
+    public ResponseEntity<ProductDTO> updateProduct(Long id, @RequestBody ProductDTO productDTO) {
+        ProductDTO savedProduct = productService.updateProduct(id, productDTO);
         return ResponseEntity.ok(savedProduct);
     }
 
     @GetMapping
-    public List<ProductDTO> listProducts(){
+    public List<ProductDTO> listAllProducts() {
         return productService.getAllProducts();
     }
 }

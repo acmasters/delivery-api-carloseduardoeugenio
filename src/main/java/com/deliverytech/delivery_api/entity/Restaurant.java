@@ -20,25 +20,23 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "client")
-public class Client {
+@Table(name = "restaurant")
+public class Restaurant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+ 
     @Column(name = "name", nullable = false)
-    private String name;
-    private String email;
-    private String phone;
-    private String address;
-    private boolean active;
+    private String name;    
+    private String description;
 
-    @OneToMany(mappedBy = "client")
-    private List<Order> orders;
+    @OneToMany(mappedBy = "restaurant")
+    private List <Product> products;
 
     @Enumerated(EnumType.STRING)
     @Setter
-    private ClientStatus status;
+    private RestaurantStatus status;
 
-    public boolean isActive() { return ClientStatus.ACTIVE.equals(getStatus());}
-    public boolean isInactive() { return ClientStatus.INACTIVE.equals(getStatus());}
+    public boolean isActive() { return RestaurantStatus.ACTIVE.equals(getStatus());}
+    public boolean isInactive() { return RestaurantStatus.INACTIVE.equals(getStatus());}
 }
