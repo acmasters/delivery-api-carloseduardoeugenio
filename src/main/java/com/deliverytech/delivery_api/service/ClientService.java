@@ -11,6 +11,7 @@ public interface ClientService {
     ClientDTO findClientByID(Long id);
     ClientDTO findClientByEmail(String email);
     ClientDTO updateClient(Long id, ClientDTO clientDTO);
+    void deleteClient(Long id);
     List<ClientDTO> listActiveClients();
     void updateStatus(UpdateStatusDTO updateStatusDTO);
 

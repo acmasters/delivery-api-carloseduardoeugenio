@@ -23,6 +23,7 @@ public class RestaurantServiceImpl implements RestaurantService {
                 .collect(Collectors.toList());
     }
 
+    @Override
     public Long createRestaurant(RestaurantDTO restaurantDTO) {
         ModelMapper modelMapper = new ModelMapper();
         Restaurant restaurant = modelMapper.map(restaurantDTO, Restaurant.class);
@@ -40,6 +41,19 @@ public class RestaurantServiceImpl implements RestaurantService {
             return restaurantDTO;
         }
         throw new ForbiddenException("Restaurant is not active.");
+    }
+
+    @Override
+    public RestaurantDTO findbyRestaurantName(String name) {
+        var modelmapper =  new ModelMapper();
+        return repository.findRestaurantByName(name)
+                .map(restaurant -> modelmapper.map(name, RestaurantDTO.class))
+                .orElseThrow(() -> new EntityNotFoundException("Restaurant Name not found: %d".formatted(name)));
+    }
+
+    @Override
+    public void deleteRestaurant(Long id) {
+        repository.deleteById(id);
     }
 
     private RestaurantDTO ConvertEntityToDTO(Restaurant entity){

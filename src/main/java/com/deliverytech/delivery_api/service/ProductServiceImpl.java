@@ -53,8 +53,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDTO findProductByCategory(String category) {
-        return null;
+    public List<ProductDTO> findProductByCategory(String category) {
+        ModelMapper modelMapper = new ModelMapper();
+        return repository.findProductByCategory(category)
+                .stream()
+                .map(product -> modelMapper.map(product, ProductDTO.class))
+                .collect(Collectors.toList());
     }
 
     @Override

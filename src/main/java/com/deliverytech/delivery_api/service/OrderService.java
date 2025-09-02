@@ -10,7 +10,7 @@ public interface OrderService {
     List<OrderDTO> findAllOrders();
     Long createOrder(OrderDTO orderDTO);
     OrderDTO findOrderById(Long id);
-    OrderDTO findOrdersByClient(Long clientID);
+    List<OrderDTO> findOrdersByClient(Long id);
     OrderDTO updateOrderStatus(Long id, OrderStatus orderStatus);
     OrderDTO deleteOrder(Long id);
     OrderDTO calculateTotalOrder(List<OrderItemsDTO> items);

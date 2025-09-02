@@ -10,6 +10,6 @@ public interface ProductService {
     ProductDTO findProductById(Long id);
     ProductDTO updateProduct(Long id, ProductDTO productDTO);
     ProductDTO updateAvailabilityProduct(Long id, boolean avaliable);
-    ProductDTO findProductByCategory(String category);
+    List<ProductDTO> findProductByCategory(String category);
     List<ProductDTO> getAllProducts();
 }

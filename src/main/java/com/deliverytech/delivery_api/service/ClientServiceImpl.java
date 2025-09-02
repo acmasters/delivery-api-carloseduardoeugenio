@@ -79,6 +79,12 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
+    public void deleteClient(Long id) {
+        logger.info("Deleting client with id: {}", id);
+        clientRepository.deleteById(id);
+    }
+
+    @Override
     public List<ClientDTO> listActiveClients() {
         var modelMapper = new ModelMapper();
         return clientRepository.findByActiveTrue().stream().map(c->

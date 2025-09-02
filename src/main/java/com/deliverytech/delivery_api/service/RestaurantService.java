@@ -7,4 +7,6 @@ public interface RestaurantService {
     List<RestaurantDTO> getAllRestaurants();
     Long createRestaurant(RestaurantDTO restaurantDTO);
     RestaurantDTO updateRestaurant(Long id, RestaurantDTO restaurantDTO);
+    RestaurantDTO findbyRestaurantName(String name);
+    void deleteRestaurant(Long id);
 }

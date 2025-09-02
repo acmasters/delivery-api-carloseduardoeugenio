@@ -32,7 +32,7 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList());
      }
 
-    @Override
+    @Transactional
     public Long createOrder(OrderDTO orderDTO) {
         return 0L;
     }
@@ -43,7 +43,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDTO findOrdersByClient(Long clientID) {
+    public List<OrderDTO> findOrdersByClient(Long id) {
         return null;
     }
 
