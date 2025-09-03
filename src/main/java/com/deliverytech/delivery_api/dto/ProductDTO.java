@@ -1,11 +1,15 @@
 package com.deliverytech.delivery_api.dto;
- 
-import com.deliverytech.delivery_api.entity.Restaurant;
+
 import lombok.Data;
- 
+
+import java.math.BigDecimal;
+
 @Data
-public class RestaurantDTO {
+public class ProductDTO {
     private Long id;
     private String name;
     private String description;
+    private BigDecimal price;
+    private String category;
+    private boolean available;
 }
