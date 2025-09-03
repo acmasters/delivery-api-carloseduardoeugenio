@@ -7,6 +7,7 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.Id;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,7 +18,7 @@ import java.util.Collection;
 import java.util.List;
 @Table(name = "user")
 @Entity(name = "User")
-@Data
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
@@ -43,6 +44,6 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return "";
+        return login;
     }
 }
