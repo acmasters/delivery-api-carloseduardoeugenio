@@ -1,7 +1,7 @@
 package com.deliverytech.delivery_api.service;
 
 import com.deliverytech.delivery_api.dto.OrderDTO;
-import com.deliverytech.delivery_api.dto.OrderItemsDTO;
+import com.deliverytech.delivery_api.dto.OrderItemDTO;
 import com.deliverytech.delivery_api.entity.Order;
 import com.deliverytech.delivery_api.entity.OrderStatus;
 import com.deliverytech.delivery_api.repository.OrderRepository;
@@ -25,12 +25,17 @@ public class OrderServiceImpl implements OrderService {
         this.repository = repository;
     }
 
+//    public List<OrderDTO> findAllOrders() {
+//        return repository.findAll()
+//                .stream()
+//                .map(this::ConvertEntityToDTO)
+//                .collect(Collectors.toList());
+//     }
+
+    @Override
     public List<OrderDTO> findAllOrders() {
-        return repository.findAll()
-                .stream()
-                .map(this::ConvertEntityToDTO)
-                .collect(Collectors.toList());
-     }
+        return List.of();
+    }
 
     @Transactional
     public Long createOrder(OrderDTO orderDTO) {
@@ -58,17 +63,17 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDTO calculateTotalOrder(List<OrderItemsDTO> items) {
+    public OrderDTO calculateTotalOrder(List<OrderItemDTO> items) {
         return null;
     }
 
-    private OrderDTO ConvertEntityToDTO(Order entity) {
-            OrderDTO orderDTO = new OrderDTO();
-            orderDTO.setId(entity.getId());
-            orderDTO.setDeliveryAddress(entity.getDeliveryAddress());
-            orderDTO.setSubtotal(entity.getSubtotal());
-            orderDTO.setDeliveryTax(entity.getDeliveryTax());
-            orderDTO.setTotalValue(entity.getTotalValue());
-            return orderDTO;
-    }
+//    private OrderDTO ConvertEntityToDTO(Order entity) {
+//            OrderDTO orderDTO = new OrderDTO();
+//            orderDTO.setId(entity.getId());
+//            orderDTO.setDeliveryAddress(entity.getDeliveryAddress());
+//            orderDTO.setSubtotal(entity.getSubtotal());
+//            orderDTO.setDeliveryTax(entity.getDeliveryTax());
+//            orderDTO.setTotalValue(entity.getTotalValue());
+//            return orderDTO;
+//    }
 }

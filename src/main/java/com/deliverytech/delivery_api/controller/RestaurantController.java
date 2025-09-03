@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/restaurantes")
+@RequestMapping("/api/v1/restaurants")
 @CrossOrigin(origins = "*")
 
 @ApiResponses(value = {

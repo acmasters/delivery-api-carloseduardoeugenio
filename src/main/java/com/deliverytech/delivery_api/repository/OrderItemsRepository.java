@@ -1,7 +1,7 @@
 package com.deliverytech.delivery_api.repository;
 
-import com.deliverytech.delivery_api.entity.OrderItems;
+import com.deliverytech.delivery_api.entity.OrderItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface OrderItemsRepository extends JpaRepository<OrderItems, Long> {
+public interface OrderItemsRepository extends JpaRepository<OrderItem, Long> {
 }

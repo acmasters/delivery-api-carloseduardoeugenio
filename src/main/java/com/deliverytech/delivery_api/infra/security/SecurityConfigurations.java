@@ -34,8 +34,7 @@ public class SecurityConfigurations {
                                 "/swagger-resources/**",
                                 "/webjars/**")
                         .permitAll()
-                        // .requestMatchers(HttpMethod.POST,"/api/products").hasRole("ADMIN") - Exemplo
-                        // de autenticação por role
+                        .requestMatchers(HttpMethod.POST,"/api/products").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

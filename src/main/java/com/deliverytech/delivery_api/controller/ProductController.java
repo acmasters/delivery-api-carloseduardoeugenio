@@ -2,6 +2,8 @@ package com.deliverytech.delivery_api.controller;
 
 import com.deliverytech.delivery_api.dto.ProductDTO;
 import com.deliverytech.delivery_api.service.ProductService;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +24,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/products")
 @CrossOrigin(origins = "*")
+@ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Product created"),
+        @ApiResponse(responseCode = "400", description = "Invalid data"),
+        @ApiResponse(responseCode = "409", description = "Product already exists"
+        )})
 public class ProductController {
     @Autowired
     private ProductService productService;

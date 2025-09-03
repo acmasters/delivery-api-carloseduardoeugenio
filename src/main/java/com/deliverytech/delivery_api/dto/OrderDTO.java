@@ -1,36 +1,20 @@
 package com.deliverytech.delivery_api.dto;
 
-import lombok.Data;
+import com.deliverytech.delivery_api.entity.OrderStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
-@Data
-public class OrderDTO {
-    private Long id;
-    private LocalDateTime orderDate;
-    private String deliveryAddress;
-    private BigDecimal subtotal;
-    private BigDecimal deliveryTax;
-    private BigDecimal totalValue;
-
-    public OrderDTO(){
-        super();
-    }
-
-    public OrderDTO(
-            Long id,
-            LocalDateTime orderDate,
-            String deliveryAddress,
-            BigDecimal subtotal,
-            BigDecimal deliveryTax,
-            BigDecimal totalValue
-    ) {
-        this.id = id;
-        this.orderDate = orderDate;
-        this.deliveryAddress = deliveryAddress;
-        this.subtotal = subtotal;
-        this.deliveryTax = deliveryTax;
-        this.totalValue = totalValue;
-    }
-}
+public record OrderDTO(
+        Long id,
+        LocalDateTime orderDate,
+        String deliveryAddress,
+        BigDecimal subtotal,
+        BigDecimal deliveryTax,
+        BigDecimal totalValue,
+        OrderStatus orderStatus,
+        List<OrderItemDTO> items,
+        Long clientId,
+        Long restaurantId
+) {}
