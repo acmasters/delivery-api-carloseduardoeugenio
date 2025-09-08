@@ -15,8 +15,11 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
     boolean existsByEmail(String email);
     Optional<Client> findClientByEmail(String email);
     List<Client>findByActiveTrue();
+    List<Client>findByNameContainingIgnoreCase(String name);
 
     @Modifying
     @Query("UPDATE Client c SET c.active = :status WHERE c.email = :email")
     boolean updateStatus(@Param("email") String email, @Param("status") boolean status);
+
+
 }

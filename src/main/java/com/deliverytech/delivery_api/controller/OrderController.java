@@ -5,6 +5,7 @@ import com.deliverytech.delivery_api.dto.OrderDTO;
 import com.deliverytech.delivery_api.dto.OrderItemDTO;
 import com.deliverytech.delivery_api.dto.UpdateOrderDTO;
 import com.deliverytech.delivery_api.dto.UpdateOrderStatusDTO;
+import com.deliverytech.delivery_api.dto.request.OrderRequest;
 import com.deliverytech.delivery_api.entity.Order;
 import com.deliverytech.delivery_api.entity.OrderItem;
 import com.deliverytech.delivery_api.entity.OrderStatus;
@@ -17,6 +18,7 @@ import com.deliverytech.delivery_api.repository.RestaurantSales;
 import com.deliverytech.delivery_api.service.OrderServiceImpl;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,9 +108,9 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<Long> createOrder(@Valid @RequestBody OrderDTO orderDTO) {
-        Long ok = orderServiceImpl.createOrder(orderDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ok);
+    public ResponseEntity<OrderDTO> createOrder(@Valid @RequestBody OrderRequest orderRequest) {
+        OrderDTO orderDTO = orderServiceImpl.createOrder(orderRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderDTO);
     }
 
     @PatchMapping("/{id}/order")
@@ -123,9 +125,9 @@ public class OrderController {
                 .orElseThrow(() -> new RuntimeException("Order not found"));
 
         order.setOrderStatus(OrderStatus.CANCELLED);
-        Order saved = orderRepository.save(order);
+        Order savedOrder = orderRepository.save(order);
 
-        return ResponseEntity.ok(toDTO(saved));
+        return ResponseEntity.ok(toDTO(savedOrder));
     }
     @PatchMapping("/{id}/status")
     public ResponseEntity<OrderDTO> updateOrderStatus(@PathVariable Long id,
@@ -138,27 +140,26 @@ public class OrderController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<OrderDTO> updateOrder(@PathVariable Long id,
-                                                @RequestBody UpdateOrderDTO dto) {
+    public ResponseEntity<OrderDTO> updateOrder(@PathVariable Long id, @RequestBody UpdateOrderDTO updateOrderDTO) {
         Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Order not found"));
 
         if (order.getOrderStatus() != OrderStatus.PENDING) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(null);
         }
 
-        if (dto.deliveryAddress() != null && !dto.deliveryAddress().isBlank()) {
-            order.setDeliveryAddress(dto.deliveryAddress());
+        if (updateOrderDTO.deliveryAddress() != null && !updateOrderDTO.deliveryAddress().isBlank()) {
+            order.setDeliveryAddress(updateOrderDTO.deliveryAddress());
         }
 
-        if (dto.items() != null && !dto.items().isEmpty()) {
-            order.getItems().clear(); // remove old items
+        if (updateOrderDTO.items() != null && !updateOrderDTO.items().isEmpty()) {
+            order.getItems().clear();
             BigDecimal subtotal = BigDecimal.ZERO;
 
-            for (CreateOrderItemDTO itemDTO : dto.items()) {
+            for (CreateOrderItemDTO itemDTO : updateOrderDTO.items()) {
                 Product product = productRepository.findById(itemDTO.productId())
-                        .orElseThrow(() -> new RuntimeException("Product not found"));
+                        .orElseThrow(() -> new EntityNotFoundException("Product not found"));
 
                 OrderItem newItem = new OrderItem(order, product, itemDTO.quantity());
                 order.getItems().add(newItem);
