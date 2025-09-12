@@ -60,9 +60,9 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public OrderDTO createOrder(OrderRequest orderRequest) {
         var clientId = orderRequest.clientId();
+        var restaurantId = orderRequest.restaurantId();
         Client client =  clientRepository.findById(clientId)
                 .orElseThrow(() -> new EntityNotFoundException("Client ID not found: %d".formatted(clientId)));
-        var restaurantId = orderRequest.restaurantId();
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new EntityNotFoundException("Restaurant ID not found: %d".formatted(restaurantId)));
     Order order = new Order();
@@ -71,16 +71,18 @@ public class OrderServiceImpl implements OrderService {
     order.setClient(client);
     order.setRestaurant(restaurant);
     order.setOrderStatus(OrderStatus.CREATED);
+
     BigDecimal subtotal =  BigDecimal.ZERO;
 
     for (OrderItemRequest itemRequest : orderRequest.items()) {
         var productId = itemRequest.productId();
+        var quantity = itemRequest.quantity();
         Product product =  productRepository.findById(productId)
                 .orElseThrow(() -> new EntityNotFoundException("Product ID not found: %d".formatted(productId)));
-        OrderItem orderItem =  new OrderItem(order, product, itemRequest.quantity());
+        OrderItem orderItem =  new OrderItem(order, product, quantity);
         order.getItems().add(orderItem);
 
-        subtotal = subtotal.add(product.getPrice().multiply(BigDecimal.valueOf(itemRequest.quantity())));
+        subtotal = subtotal.add(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
     }
     order.setSubtotal(subtotal);
     order.setDeliveryTax(BigDecimal.valueOf(5.00));
@@ -149,7 +151,7 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderDTO> findByOrderStatus(OrderStatus orderStatus) {
         return orderRepository.findByOrderStatus(orderStatus).stream().map(this::toDTO).toList();
     }
-    public List<OrderDTO> findByClientId(Long id) {
+    public List<OrderDTO> findByClientClientId(Long id) {
         return orderRepository.findByClientId(id).stream().map(this::toDTO).toList();
     }
     public List<OrderDTO> findTop10ByOrderByOrderDateDesc() {
@@ -185,15 +187,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private OrderDTO toDTO(Order order) {
-        List<OrderItemDTO> items = order.getItems()
-                .stream()
-                .map(i -> new OrderItemDTO(
-                        i.getProduct().getId(),
-                        i.getProduct().getName(),
-                        i.getQuantity(),
-                        i.getItemPrice()
-                )).toList();
-
         return new OrderDTO(
                 order.getId(),
                 order.getOrderDate(),
@@ -202,7 +195,12 @@ public class OrderServiceImpl implements OrderService {
                 order.getDeliveryTax(),
                 order.getTotalValue(),
                 order.getOrderStatus(),
-                items,
+                order.getItems().stream().map(item ->
+                                new OrderItemDTO(
+                                        item.getProduct().getId(),
+                                        item.getProduct().getName(),
+                                        item.getQuantity(),
+                                        item.getItemPrice())).toList(),
                 order.getClient().getId(),
                 order.getRestaurant().getId()
         );

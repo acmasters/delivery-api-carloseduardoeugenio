@@ -90,7 +90,8 @@ public class OrderController {
 
     @GetMapping("/latest")
     public List<OrderDTO> getLatestOrders() {
-        return orderRepository.findTop10ByOrderByOrderDateDesc().stream()
+        return orderRepository.findTop10ByOrderByOrderDateDesc()
+                .stream()
                 .map(this::toDTO)
                 .toList();
     }
@@ -107,7 +108,7 @@ public class OrderController {
         return orderRepository.getTotalRestaurantSales();
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<OrderDTO> createOrder(@Valid @RequestBody OrderRequest orderRequest) {
         OrderDTO orderDTO = orderServiceImpl.createOrder(orderRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(orderDTO);
